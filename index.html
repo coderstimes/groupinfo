@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Group Info Ltd.</title>
+	<style type="text/css">
+* {
+  box-sizing: border-box;
+  cursor: none;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  overflow: hidden;
+}
+body main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: inherit;
+}
+body main .center-triangle {
+  width: 300px;
+}
+body main .center-triangle .triangle {
+  fill: #fff;
+  stroke: #1a1a1a;
+  stroke-width: 1;
+  transition: 100ms;
+}
+body main .center-triangle .triangle-shadow {
+  mix-blend-mode: multiply;
+  opacity: 0.75;
+  transition: 200ms;
+}
+body header, body footer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  top: 0;
+  width: 75px;
+  height: inherit;
+}
+body header {
+  left: 0;
+  font-size: 0.875rem;
+  letter-spacing: 2px;
+  word-spacing: 4px;
+  white-space: nowrap;
+}
+body header .upper {
+  position: relative;
+  transform: rotate(-90deg) translateX(-100px);
+}
+body header .upper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 30px;
+  height: 1px;
+  margin-left: 1rem;
+  background: #1a1a1a;
+}
+body header .lower {
+  display: flex;
+  align-items: center;
+  transform: rotate(-90deg) translateX(85px);
+}
+body header .lower svg {
+  width: 25px;
+}
+body header .lower h6 {
+  padding-left: 1rem;
+}
+body footer {
+  right: 0;
+}
+body footer .upper .barcode {
+  transform: rotate(90deg) translateX(60px) !important;
+}
+body footer .lower {
+  transform: rotate(90deg) translateX(-50px);
+}
+body footer .lower img {
+  width: 120px;
+}
+	</style>
+</head>
+<body>
+<header>
+  <section class="upper">Site Work in Progress</section>
+  <section class="lower">
+    <div>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31.87 31.87">
+        <path class="cls-1" d="M15.94,31.87,13,24.57A10.32,10.32,0,0,0,7.3,18.88L0,15.94,7.3,13A10.32,10.32,0,0,0,13,7.3L15.94,0l2.94,7.3A10.32,10.32,0,0,0,24.57,13l7.3,2.95-7.3,2.94a10.32,10.32,0,0,0-5.69,5.69Z" />
+      </svg>
+    </div>
+    <h6>Infotainment, Digital Communications and Media Advisory Group</h6>
+  </section>
+</header>
+<main>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" class="center-triangle">
+    <g class="triangle-shadow">
+      <polygon points="220 112.61 282 220 344 327.39 220 327.39 96 327.39 158 220 220 112.61" />
+    </g>
+    <polygon class="triangle" points="200 92.61 262 200 324 307.39 200 307.39 76 307.39 138 200 200 92.61" />
+  </svg>
+</main>
+<footer>
+  <section class="upper"><svg class="barcode"></svg></section>
+  <section class="lower">
+    <a href="https://www.facebook.com/GroupInfo.ltd/" target="_blank">
+      <img alt="curzr logo" width="120" src="logo.png">
+    </a>
+  </section>
+</footer>
+<div class="curzr" hidden>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <defs>
+      <style>
+        .line {
+          stroke: #1a1a1a;
+          stroke-linecap: round;
+          stroke-miterlimit: 10;
+        }
+      </style>
+    </defs>
+    <line class="line line-v" x1="50" y1="40" x2="50" y2="60" />
+    <line class="line line-h" x1="40" y1="50" x2="60" y2="50" />
+  </svg>
+</div>
+</body>
+<script type="text/javascript">
+class CrossLine {
+  constructor() {
+    this.root = document.body
+    this.cursor = document.querySelector(".curzr")
+    this.verLine = document.querySelector(".curzr .line-v")
+    this.horLine = document.querySelector(".curzr .line-h")
+    // For Triangle
+    this.triangle = document.querySelector(".triangle")
+    this.triangleShadow = document.querySelector(".triangle-shadow")
+
+    this.distanceX = 0 
+    this.distanceY = 0
+    this.pointerX = 0
+    this.pointerY = 0
+    this.previousPointerX = 0
+    this.previousPointerY = 0
+    this.cursorSize = 100
+    this.moving = false
+
+    this.cursorStyle = {
+      boxSizing: 'border-box',
+      position: 'fixed',
+      top: `${ this.cursorSize / -2 }px`,
+      left: `${ this.cursorSize / -2 }px`,
+      zIndex: '2147483647',
+      width: `${ this.cursorSize }px`,
+      height: `${ this.cursorSize }px`,
+      borderRadius: '50%',
+      overflow: 'visible',
+      transition: '200ms, transform 100ms',
+      userSelect: 'none',
+      pointerEvents: 'none'
+    }
+
+    this.init(this.cursor, this.cursorStyle)
+  }
+
+  init(el, style) {
+    Object.assign(el.style, style)
+    this.cursor.removeAttribute("hidden")
+    
+  }
+
+  move(event) {
+    this.previousPointerX = this.pointerX
+    this.previousPointerY = this.pointerY
+    this.pointerX = event.pageX + this.root.getBoundingClientRect().x
+    this.pointerY = event.pageY + this.root.getBoundingClientRect().y
+    this.distanceX = (this.previousPointerX - this.pointerX) / 1.5
+    this.distanceY = (this.previousPointerY - this.pointerY) / 1.5
+    
+    this.verLine.setAttribute('y1', Math.min(40, (40 + this.distanceY)))
+    this.verLine.setAttribute('y2', Math.max(60, (60 + this.distanceY)))
+    this.horLine.setAttribute('x1', Math.min(40, (40 + this.distanceX)))
+    this.horLine.setAttribute('x2', Math.max(60, (60 + this.distanceX)))
+
+    this.cursor.style.transform = `translate3d(${this.pointerX}px, ${this.pointerY}px, 0)`
+    this.triangleShadow.style.transform = `translate3d(${this.pointerX / (window.innerWidth / 40)}px, ${this.pointerY / (window.innerWidth / 40)}px, 0)`
+    this.triangle.style.transform = `translate3d(${this.pointerX / (window.innerWidth / 20)}px, ${this.pointerY / (window.innerWidth / 20)}px, 0)`
+
+    if (event.target.localName === 'img' || 
+        event.target.localName === 'polygon' ||
+        event.target.onclick !== null ||
+        Array.from(event.target.classList).includes('curzr-hover')) {
+      this.hover()
+    }
+    
+    this.moving ? this.stop() : this.moving = true
+  }
+
+  hover() {
+    this.cursor.style.transform += ` rotate(45deg)`
+  }
+  
+  stop() {
+    setTimeout(() => {
+      this.verLine.setAttribute('y1', 40)
+      this.verLine.setAttribute('y2', 60)
+      this.horLine.setAttribute('x1', 40)
+      this.horLine.setAttribute('x2', 60)
+      this.moving = false
+    }, 50)
+  }
+}
+
+(() => {
+  const cursor = new CrossLine()
+  document.onmousemove = function (event) {
+    cursor.move(event)
+  }
+  document.ontouchmove = function (event) {
+    cursor.move(event.touches[0])
+  }
+})()
+
+JsBarcode(".barcode", "01", {
+  lineColor: "#1a1a1a",
+  width: 2,
+  height: 20,
+  displayValue: false
+})
+</script>
+</html>
+
